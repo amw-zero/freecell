@@ -1,0 +1,14 @@
+require:
+  - rubocop-rspec
+
+AllCops:
+  Include:
+    - '**/*.rb'
+    - '**/**/*.rb'
+  Exclude:
+    - 'bin/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/*'
+    - 'spec/**/*'
