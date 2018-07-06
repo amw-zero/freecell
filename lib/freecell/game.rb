@@ -10,10 +10,13 @@ module Freecell
 
     def handle_key(key)
       @input_handler.handle_key(key)
-      @cascades[1] << @cascades[0].pop if @input_handler.move_complete
+      return unless @input_handler.move_complete &&
+                    legal_move?(@input_handler.current_move)
+      @cascades[1] << @cascades[0].pop
     end
 
-    def legal_move?(src_cascade_idx, dest_cascade_idx)
+    def legal_move?(move)
+      src_cascade_idx, dest_cascade_idx = move.values_at(:src_idx, :dest_idx)
       last_cascade_card(src_cascade_idx) < last_cascade_card(dest_cascade_idx)
     end
 

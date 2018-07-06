@@ -24,7 +24,7 @@ RSpec.describe Freecell do
       end
     end
 
-    skip 'when the move is not legal' do
+    context 'when the move is not legal' do
       let(:cascade_one) { [four_of_diamonds] }
       let(:cascade_two) { [five_of_spades] }
 
