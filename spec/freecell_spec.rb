@@ -3,7 +3,7 @@ RSpec.describe Freecell do
 
   describe 'cascade moves' do
     subject(:cascade_cards) do
-      [game.cascades[0].last, game.cascades[1].last]
+      [game.cascades[0], game.cascades[1]]
     end
 
     let(:five_of_spades) { Freecell::Card.new(5, :spades) }
@@ -20,7 +20,7 @@ RSpec.describe Freecell do
       end
 
       it 'moves cards between cascades' do
-        expect(cascade_cards).to eq([nil, four_of_diamonds])
+        expect(cascade_cards).to eq([[], [five_of_spades, four_of_diamonds]])
       end
     end
 
@@ -34,7 +34,47 @@ RSpec.describe Freecell do
       end
 
       it 'does not move cards between cascades' do
-        expect(cascade_cards).to eq([four_of_diamonds, five_of_spades])
+        expect(cascade_cards).to eq([[four_of_diamonds], [five_of_spades]])
+      end
+    end
+
+    context 'when an illegal move is made after a legal one' do
+      let(:three_of_diamonds) { Freecell::Card.new(3, :diamonds) }
+      let(:cascade_one) { [three_of_diamonds, four_of_diamonds] }
+      let(:cascade_two) { [five_of_spades] }
+
+      before do
+        game.handle_key('a')
+        game.handle_key('b')
+
+        game.handle_key('a')
+        game.handle_key('b')
+      end
+
+      it 'moves legal cards between cascades, but not illegal cards' do
+        expect(cascade_cards).to eq(
+          [[three_of_diamonds], [five_of_spades, four_of_diamonds]]
+        )
+      end
+    end
+
+    context 'when multiple legal moves are made after another' do
+      let(:five_of_clubs) { Freecell::Card.new(5, :clubs) }
+      let(:cascade_one) { [five_of_clubs, four_of_diamonds] }
+      let(:cascade_two) { [five_of_spades] }
+
+      before do
+        game.handle_key('a')
+        game.handle_key('b')
+
+        game.handle_key('b')
+        game.handle_key('a')
+      end
+
+      it 'moves the cards between cascades' do
+        expect(cascade_cards).to eq(
+          [[five_of_clubs, four_of_diamonds], [five_of_spades]]
+        )
       end
     end
   end
