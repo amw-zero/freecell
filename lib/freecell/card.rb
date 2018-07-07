@@ -24,5 +24,9 @@ module Freecell
         false
       end
     end
+
+    def to_s
+      "#{@rank}#{@suit.to_s[0]}"
+    end
   end
 end
