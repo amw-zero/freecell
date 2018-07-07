@@ -11,10 +11,14 @@ module Freecell
 
     def handle_key(key)
       @move_parts << key_to_cascade_idx(key)
-      return unless @move_parts.length == 2
-
-      @move_complete = true
-      @current_move = { src_idx: @move_parts[0], dest_idx: @move_parts[1] }
+      if @move_parts.length == 2
+        @move_complete = true
+        @current_move = { src_idx: @move_parts[0], dest_idx: @move_parts[1] }
+        @move_parts = []
+      else
+        @move_complete = false
+        @current_move = nil
+      end
     end
 
     def key_to_cascade_idx(key)
