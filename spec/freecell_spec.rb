@@ -6,8 +6,8 @@ RSpec.describe Freecell do
       [game.cascades[0].last, game.cascades[1].last]
     end
 
-    let(:five_of_spades) { 5 }
-    let(:four_of_diamonds) { 4 }
+    let(:five_of_spades) { Freecell::Card.new(5, :spades) }
+    let(:four_of_diamonds) { Freecell::Card.new(4, :diamonds) }
     let(:cascades) { [cascade_one, cascade_two] }
 
     context 'when the move is legal' do
