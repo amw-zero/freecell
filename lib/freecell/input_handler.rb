@@ -1,6 +1,8 @@
 module Freecell
   # Handles user input, giving it semantic game meaning
   class InputHandler
+    ASCII_LOWERCASE_A = 97
+
     attr_reader :move_complete, :current_move
 
     def initialize
@@ -22,12 +24,7 @@ module Freecell
     end
 
     def key_to_cascade_idx(key)
-      case key
-      when 'a'
-        0
-      when 'b'
-        1
-      end
+      key.ord - ASCII_LOWERCASE_A
     end
   end
 end
