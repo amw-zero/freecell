@@ -14,6 +14,10 @@ module Freecell
       @rank <=> other.rank
     end
 
+    def ==(other)
+      @rank == other.rank && @suit == other.suit
+    end
+
     def opposite_color?(other)
       case @suit
       when :hearts, :diamonds

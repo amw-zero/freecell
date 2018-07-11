@@ -1,10 +1,27 @@
 RSpec.describe Freecell do
-  let(:game) { Freecell::Game.new(cascades: cascades) }
+  describe 'game setup' do
+    let(:game) { Freecell::Game.new }
+    let(:cascades) { game.cascades }
+
+    before do
+      game.deal_cards
+    end
+
+    it 'deals the correct number of cascades' do
+      expect(cascades.length).to eq(8)
+    end
+
+    it 'deals the correct number of cards in each cascade' do
+      expect(cascades.map(&:length)).to eq([7, 7, 7, 7, 6, 6, 6, 6])
+    end
+  end
 
   describe 'cascade moves' do
     subject(:cascade_cards) do
       [game.cascades[0], game.cascades[1]]
     end
+
+    let(:game) { Freecell::Game.new(cascades: cascades) }
 
     let(:five_of_spades) { Freecell::Card.new(5, :spades) }
     let(:four_of_diamonds) { Freecell::Card.new(4, :diamonds) }

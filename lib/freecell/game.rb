@@ -8,6 +8,10 @@ module Freecell
       @input_handler = InputHandler.new
     end
 
+    def deal_cards
+      @cascades = CascadeBuilder.new.build_cascades
+    end
+
     def handle_key(key)
       @input_handler.handle_key(key)
       return unless @input_handler.move_complete &&
