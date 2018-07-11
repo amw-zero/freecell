@@ -1,1 +1,13 @@
-puts 'This will be a commandline freecell game.'
+#!/usr/bin/env ruby
+
+require 'freecell'
+
+game = Freecell::Game.new
+ui = Freecell::NcursesUI.new
+
+game.deal_cards
+ui.render(game)
+loop do
+  game.handle_key(ui.receive_key)
+  ui.render(game)
+end
