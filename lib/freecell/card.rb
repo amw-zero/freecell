@@ -30,7 +30,23 @@ module Freecell
     end
 
     def to_s
-      "#{@rank}#{@suit.to_s[0]}"
+      card_string = "#{@rank}#{@suit.to_s[0]}"
+      if @rank < 10
+        " #{card_string}"
+      else
+        card_string
+      end
+    end
+  end
+
+  # A NullObject card representation
+  class NullCard < Card
+    def initialize
+      super(-1, :empty_suit)
+    end
+
+    def to_s
+      '   '
     end
   end
 end
