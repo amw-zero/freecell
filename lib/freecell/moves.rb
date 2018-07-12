@@ -1,11 +1,20 @@
 module Freecell
   # Factory for creating moves from user input
   class Move
+    ASCII_LOWERCASE_A = 97
+
     def self.from(input:, cascades:)
       case input
-      when /[0-7][0-7]/
-        CascadeToCascadeMove.new(cascades, input[0], input[1])
+      when /[a-h][a-h]/
+        CascadeToCascadeMove.new(
+          cascades,
+          *input.chars.map(&method(:key_to_cascade_idx))
+        )
       end
+    end
+
+    def self.key_to_cascade_idx(key)
+      key.ord - ASCII_LOWERCASE_A
     end
   end
 
