@@ -95,4 +95,26 @@ RSpec.describe Freecell do
       end
     end
   end
+
+  describe 'Cascade to free cell moves' do
+    subject { game.free_cells }
+
+    let(:game) do
+      Freecell::Game.new(cascades: cascades, free_cells: free_cells)
+    end
+
+    let(:cascades) { [[five_of_diamonds]] }
+    let(:five_of_diamonds) { Freecell::Card.new(5, :diamonds) }
+
+    let(:free_cells) { [] }
+
+    before do
+      game.handle_key('a')
+
+      # This requires making a new Move type
+      game.handle_key(' ')
+    end
+
+    it { is_expected.to eq([five_of_diamonds]) }
+  end
 end
