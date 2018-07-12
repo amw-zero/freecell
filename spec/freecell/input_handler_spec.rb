@@ -41,7 +41,7 @@ RSpec.describe Freecell::InputHandler do
         input_handler.handle_key('b')
       end
 
-      it { is_expected.to eq '01' }
+      it { is_expected.to eq 'ab' }
     end
 
     context 'when a single move has been received to the last cascade' do
@@ -50,7 +50,7 @@ RSpec.describe Freecell::InputHandler do
         input_handler.handle_key('h')
       end
 
-      it { is_expected.to eq '07' }
+      it { is_expected.to eq 'ah' }
     end
 
     context 'when a key is receieved after a move was received' do
