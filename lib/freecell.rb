@@ -4,6 +4,7 @@ require 'freecell/card_grid'
 require 'freecell/cascade_builder'
 require 'freecell/game'
 require 'freecell/input_handler'
+require 'freecell/moves'
 require 'freecell/ncurses_ui'
 
 # Module containing all Freecell code

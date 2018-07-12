@@ -7,19 +7,19 @@ module Freecell
 
     def initialize
       @move_parts = []
+      @current_move = nil
       @move_complete = false
-      @curent_move = nil
     end
 
     def handle_key(key)
+      @current_move = nil
       @move_parts << key_to_cascade_idx(key)
       if @move_parts.length == 2
         @move_complete = true
-        @current_move = { src_idx: @move_parts[0], dest_idx: @move_parts[1] }
+        @current_move = @move_parts.join
         @move_parts = []
       else
         @move_complete = false
-        @current_move = nil
       end
     end
 
