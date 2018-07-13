@@ -110,8 +110,6 @@ RSpec.describe Freecell do
 
     before do
       game.handle_key('a')
-
-      # This requires making a new Move type
       game.handle_key(' ')
     end
 

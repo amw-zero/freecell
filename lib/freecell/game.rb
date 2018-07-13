@@ -19,7 +19,8 @@ module Freecell
 
       Move.from(
         input: @input_handler.current_move,
-        cascades: cascades
+        cascades: cascades,
+        free_cells: free_cells
       ).tap do |move|
         break unless move.legal?
         move.perform
