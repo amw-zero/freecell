@@ -3,15 +3,23 @@ module Freecell
   class Move
     ASCII_LOWERCASE_A = 97
 
-    def self.from(input:, cascades:)
+    # rubocop:disable Metrics/MethodLength
+    def self.from(input:, cascades:, free_cells:)
       case input
       when /[a-h][a-h]/
         CascadeToCascadeMove.new(
           cascades,
           *input.chars.map(&method(:key_to_cascade_idx))
         )
+      when /[a-h] /
+        CascadeToFreeCellMove.new(
+          cascades,
+          free_cells,
+          key_to_cascade_idx(input.chars[0])
+        )
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def self.key_to_cascade_idx(key)
       key.ord - ASCII_LOWERCASE_A
@@ -36,6 +44,23 @@ module Freecell
 
     def perform
       @cascades[dest_idx] << @cascades[src_idx].pop
+    end
+  end
+
+  # Carry out a move between a cascade and a free cell
+  class CascadeToFreeCellMove
+    def initialize(cascades, free_cells, src_idx)
+      @cascades = cascades
+      @free_cells = free_cells
+      @src_idx = src_idx.to_i
+    end
+
+    def legal?
+      true
+    end
+
+    def perform
+      @free_cells << @cascades[@src_idx].pop
     end
   end
 end
