@@ -131,4 +131,27 @@ RSpec.describe Freecell do
 
     it { is_expected.to eq [[ace_of_spades], [], [], []] }
   end
+
+  describe 'invalid moves' do
+    subject { [cascades, free_cells, foundations] }
+
+    let(:game) do
+      Freecell::Game.new(
+        cascades: cascades,
+        free_cells: free_cells,
+        foundations: foundations
+      )
+    end
+
+    let(:cascades) { [[]] }
+    let(:free_cells) { [] }
+    let(:foundations) { [] }
+
+    before do
+      game.handle_key('l')
+      game.handle_key(17)
+    end
+
+    it { is_expected.to eq [cascades, free_cells, foundations] }
+  end
 end
