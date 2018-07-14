@@ -37,6 +37,10 @@ module Freecell
         card_string
       end
     end
+
+    def inspect
+      to_s
+    end
   end
 
   # A NullObject card representation
