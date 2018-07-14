@@ -11,13 +11,22 @@ module Freecell
 
     def handle_key(key)
       @current_move = nil
-      @move_parts << key
+      @move_parts << sanitize_input(key)
       if @move_parts.length == 2
         @move_complete = true
         @current_move = @move_parts.join
         @move_parts = []
       else
         @move_complete = false
+      end
+    end
+
+    def sanitize_input(key)
+      case key
+      when ASCIIBytes::CARRIAGE_RETURN
+        "\n"
+      else
+        key
       end
     end
   end
