@@ -40,11 +40,21 @@ module Freecell
       render_free_cells(game)
       render_foundations(game)
       advance_y(by: 1, x_pos: 2)
-      game.free_cells.length.times { |i| Curses.addstr(free_cell_letter(i)) }
+      game.free_cells.each_with_index do |card, i|
+        render_free_cell_letter(i) if card
+      end
+    end
+
+    def render_free_cell_letter(free_cell_idx)
+      Curses.setpos(@y_pos, 2 + 5 * free_cell_idx)
+      Curses.addstr(free_cell_letter(free_cell_idx))
     end
 
     def render_free_cells(game)
-      game.free_cells.each { |card| Curses.addstr("[#{card}]") }
+      game.free_cells.each do |card|
+        display_card = card || NullCard.new
+        Curses.addstr("[#{display_card}]")
+      end
       (4 - game.free_cells.length).times { Curses.addstr("[#{NullCard.new}]") }
     end
 

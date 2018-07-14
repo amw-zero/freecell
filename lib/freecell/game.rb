@@ -3,7 +3,11 @@ module Freecell
   class Game
     attr_reader :cascades, :free_cells, :foundations
 
-    def initialize(cascades: [], free_cells: [], foundations: [[], [], [], []])
+    def initialize(
+      cascades: [],
+      free_cells: Array.new(4) { nil },
+      foundations: Array.new(4) { [] }
+    )
       @cascades = cascades
       @free_cells = free_cells
       @foundations = foundations
