@@ -1,4 +1,5 @@
 require 'freecell/version'
+require 'freecell/ascii_bytes'
 require 'freecell/card'
 require 'freecell/card_grid'
 require 'freecell/cascade_builder'

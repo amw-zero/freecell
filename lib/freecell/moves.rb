@@ -1,10 +1,8 @@
 module Freecell
   # Factory for creating moves from user input
   class Move
-    ASCII_LOWERCASE_A = 97
-
     # rubocop:disable Metrics/MethodLength
-    def self.from(input:, cascades:, free_cells:)
+    def self.from(input:, cascades:, free_cells:, foundations:)
       case input
       when /[a-h][a-h]/
         CascadeToCascadeMove.new(
@@ -17,12 +15,18 @@ module Freecell
           free_cells,
           key_to_cascade_idx(input.chars[0])
         )
+      when /[a-h]\n/
+        CascadeToFoundationMove.new(
+          cascades,
+          foundations,
+          key_to_cascade_idx(input.chars[0])
+        )
       end
     end
     # rubocop:enable Metrics/MethodLength
 
     def self.key_to_cascade_idx(key)
-      key.ord - ASCII_LOWERCASE_A
+      key.ord - ASCIIBytes::LOWERCASE_A
     end
   end
 
@@ -62,6 +66,34 @@ module Freecell
 
     def perform
       @free_cells << @cascades[@src_idx].pop
+    end
+  end
+
+  # Carry out a move between a cascade and a foundation
+  class CascadeToFoundationMove
+    FOUNDATIONS = %i[spades hearts clubs diamonds].freeze
+
+    def initialize(cascades, foundations, src_idx)
+      @cascades = cascades
+      @foundations = foundations
+      @src_idx = src_idx.to_i
+    end
+
+    def legal?
+      card = @cascades[@src_idx].last
+      foundation_idx = foundation_index(card.suit)
+      return card.rank == 1 if @foundations[foundation_idx].empty?
+
+      card.rank == @foundations[foundation_idx].last.rank + 1
+    end
+
+    def perform
+      card = @cascades[@src_idx].pop
+      @foundations[foundation_index(card.suit)] << card
+    end
+
+    def foundation_index(card_suit)
+      FOUNDATIONS.index { |suit| suit == card_suit }
     end
   end
 end

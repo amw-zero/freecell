@@ -62,5 +62,18 @@ RSpec.describe Freecell::InputHandler do
 
       it { is_expected.to be_nil }
     end
+
+    context 'when a special character is received' do
+      subject(:current_move) { input_handler.current_move }
+
+      before do
+        input_handler.handle_key('a')
+        input_handler.handle_key(Freecell::ASCIIBytes::CARRIAGE_RETURN)
+      end
+
+      it 'sanitizes the character to its ASCII byte' do
+        expect(current_move).to eq "a\n"
+      end
+    end
   end
 end

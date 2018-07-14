@@ -115,4 +115,20 @@ RSpec.describe Freecell do
 
     it { is_expected.to eq([five_of_diamonds]) }
   end
+
+  describe 'Cascade to foundation moves' do
+    subject { game.foundations }
+
+    let(:game) { Freecell::Game.new(cascades: cascades) }
+
+    let(:ace_of_spades) { Freecell::Card.new(1, :spades) }
+    let(:cascades) { [[ace_of_spades]] }
+
+    before do
+      game.handle_key('a')
+      game.handle_key(Freecell::ASCIIBytes::CARRIAGE_RETURN)
+    end
+
+    it { is_expected.to eq [[ace_of_spades], [], [], []] }
+  end
 end
