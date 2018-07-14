@@ -27,7 +27,7 @@ module Freecell
         free_cells: free_cells,
         foundations: foundations
       ).tap do |move|
-        break unless move.legal?
+        break unless move && move.legal?
         move.perform
       end
     end
