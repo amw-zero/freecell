@@ -29,6 +29,10 @@ module Freecell
       end
     end
 
+    def black?
+      %i[spades clubs].include?(@suit)
+    end
+
     def to_s
       card_string = "#{@rank}#{@suit.to_s[0]}"
       if @rank < 10

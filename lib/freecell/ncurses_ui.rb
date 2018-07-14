@@ -4,6 +4,7 @@ module Freecell
   # Commandline UI
   class NcursesUI
     CASCADE_MARGIN = 3
+    BLACK_CARD_COLOR_PAIR_ID = 0
 
     def initialize
       Curses.init_screen
@@ -11,6 +12,7 @@ module Freecell
       Curses.noecho
       Curses.nonl
       Curses.curs_set(0)
+      setup_color
       @y_pos = 0
     ensure
       Curses.close_screen
@@ -27,6 +29,15 @@ module Freecell
       render_cascades(game)
       render_cascade_letters
       render_debug_info(game)
+    end
+
+    def setup_color
+      Curses.start_color
+      Curses.init_pair(
+        BLACK_CARD_COLOR_PAIR_ID,
+        Curses::COLOR_CYAN,
+        Curses::COLOR_BLACK
+      )
     end
 
     def advance_y(by:, x_pos: 0)
