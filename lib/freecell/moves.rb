@@ -56,7 +56,7 @@ module Freecell
     end
 
     def legal?
-      true
+      @free_cells.length < 4
     end
 
     def perform
