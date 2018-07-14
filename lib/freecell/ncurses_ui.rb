@@ -65,9 +65,7 @@ module Freecell
     end
 
     def print_card_row(row)
-      row.each do |card|
-        Curses.addstr("#{card}  ")
-      end
+      row.each { |card| Curses.addstr("#{card}  ") }
       advance_y(by: 1, x_pos: CASCADE_MARGIN)
     end
   end
