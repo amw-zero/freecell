@@ -9,6 +9,8 @@ module Freecell
         cascade_to_free_cell_move(input, cascades, free_cells)
       when /[a-h]\n/
         cascade_to_foundation_move(input, cascades, foundations)
+      when /[w-z][a-h]/
+        free_cell_to_cascade_move(input, cascades, free_cells)
       end
     end
 
@@ -35,8 +37,21 @@ module Freecell
       )
     end
 
+    def self.free_cell_to_cascade_move(input, cascades, free_cells)
+      FreeCellToCascadeMove.new(
+        cascades,
+        free_cells,
+        key_to_free_cell_idx(input.chars[0]),
+        key_to_cascade_idx(input.chars[1])
+      )
+    end
+
     def self.key_to_cascade_idx(key)
       key.ord - ASCIIBytes::LOWERCASE_A
+    end
+
+    def self.key_to_free_cell_idx(key)
+      key.ord - ASCIIBytes::LOWERCASE_W
     end
   end
 
@@ -70,11 +85,12 @@ module Freecell
     end
 
     def legal?
-      @free_cells.length < 4
+      @free_cells.compact.length < 4
     end
 
     def perform
-      @free_cells << @cascades[@src_idx].pop
+      insert_idx = @free_cells.index(&:nil?)
+      @free_cells[insert_idx] = @cascades[@src_idx].pop
     end
   end
 
@@ -103,6 +119,29 @@ module Freecell
 
     def foundation_index(card_suit)
       FOUNDATIONS.index { |suit| suit == card_suit }
+    end
+  end
+
+  # Carry out a move between a free cell and a cascade
+  class FreeCellToCascadeMove
+    def initialize(cascades, free_cells, src_idx, dest_idx)
+      @cascades = cascades
+      @free_cells = free_cells
+      @src_idx = src_idx
+      @dest_idx = dest_idx
+    end
+
+    def legal?
+      src_card = @free_cells[@src_idx]
+      return false unless src_card
+      dest_card = @cascades[@dest_idx].last
+      MoveLegality.tableau_move_legal?(src_card, dest_card)
+    end
+
+    def perform
+      card = @free_cells[@src_idx]
+      @free_cells[@src_idx] = nil
+      @cascades[@dest_idx] << card
     end
   end
 end

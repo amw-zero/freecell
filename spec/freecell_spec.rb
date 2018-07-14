@@ -100,20 +100,18 @@ RSpec.describe Freecell do
     subject { game.free_cells }
 
     let(:game) do
-      Freecell::Game.new(cascades: cascades, free_cells: free_cells)
+      Freecell::Game.new(cascades: cascades)
     end
 
     let(:cascades) { [[five_of_diamonds]] }
     let(:five_of_diamonds) { Freecell::Card.new(5, :diamonds) }
-
-    let(:free_cells) { [] }
 
     before do
       game.handle_key('a')
       game.handle_key(' ')
     end
 
-    it { is_expected.to eq([five_of_diamonds]) }
+    it { is_expected.to eq([five_of_diamonds, nil, nil, nil]) }
   end
 
   describe 'Cascade to foundation moves' do
@@ -130,6 +128,27 @@ RSpec.describe Freecell do
     end
 
     it { is_expected.to eq [[ace_of_spades], [], [], []] }
+  end
+
+  describe 'Free cell to cascade moves' do
+    subject { [game.cascades[0].last, free_cells] }
+
+    let(:game) do
+      Freecell::Game.new(cascades: cascades, free_cells: free_cells)
+    end
+
+    let(:three_of_hearts) { Freecell::Card.new(3, :hearts) }
+    let(:four_of_clubs) { Freecell::Card.new(4, :clubs) }
+
+    let(:free_cells) { [three_of_hearts] }
+    let(:cascades) { [[four_of_clubs]] }
+
+    before do
+      game.handle_key('w')
+      game.handle_key('a')
+    end
+
+    it { is_expected.to eq [three_of_hearts, [nil]] }
   end
 
   describe 'invalid moves' do
