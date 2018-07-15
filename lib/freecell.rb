@@ -5,6 +5,7 @@ require 'freecell/card_grid'
 require 'freecell/cascade_builder'
 require 'freecell/game'
 require 'freecell/input_handler'
+require 'freecell/move_legality'
 require 'freecell/moves'
 require 'freecell/ncurses_ui'
 
