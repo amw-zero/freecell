@@ -53,8 +53,7 @@ module Freecell
     def legal?
       src_card = cascades[src_idx].last
       dest_card = cascades[dest_idx].last
-      src_is_one_less = src_card.rank == dest_card.rank - 1
-      src_is_one_less && src_card.opposite_color?(dest_card)
+      MoveLegality.tableau_move_legal?(src_card, dest_card)
     end
 
     def perform
