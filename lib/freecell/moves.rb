@@ -1,29 +1,39 @@
 module Freecell
   # Factory for creating moves from user input
   class Move
-    # rubocop:disable Metrics/MethodLength
     def self.from(input:, cascades:, free_cells:, foundations:)
       case input
       when /[a-h][a-h]/
-        CascadeToCascadeMove.new(
-          cascades,
-          *input.chars.map(&method(:key_to_cascade_idx))
-        )
+        cascade_to_cascade_move(input, cascades)
       when /[a-h] /
-        CascadeToFreeCellMove.new(
-          cascades,
-          free_cells,
-          key_to_cascade_idx(input.chars[0])
-        )
+        cascade_to_free_cell_move(input, cascades, free_cells)
       when /[a-h]\n/
-        CascadeToFoundationMove.new(
-          cascades,
-          foundations,
-          key_to_cascade_idx(input.chars[0])
-        )
+        cascade_to_foundation_move(input, cascades, foundations)
       end
     end
-    # rubocop:enable Metrics/MethodLength
+
+    def self.cascade_to_cascade_move(input, cascades)
+      CascadeToCascadeMove.new(
+        cascades,
+        *input.chars.map(&method(:key_to_cascade_idx))
+      )
+    end
+
+    def self.cascade_to_free_cell_move(input, cascades, free_cells)
+      CascadeToFreeCellMove.new(
+        cascades,
+        free_cells,
+        key_to_cascade_idx(input.chars[0])
+      )
+    end
+
+    def self.cascade_to_foundation_move(input, cascades, foundations)
+      CascadeToFoundationMove.new(
+        cascades,
+        foundations,
+        key_to_cascade_idx(input.chars[0])
+      )
+    end
 
     def self.key_to_cascade_idx(key)
       key.ord - ASCIIBytes::LOWERCASE_A
