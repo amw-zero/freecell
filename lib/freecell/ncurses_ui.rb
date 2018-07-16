@@ -1,6 +1,33 @@
 require 'curses'
 
 module Freecell
+  COLOR_PAIR_IDS = {
+    black_card: 1
+  }.freeze
+
+  # Decorator for card rendering logic
+  class RenderableCard
+    attr_reader :card
+
+    def initialize(card)
+      @card = card
+    end
+
+    def render
+      if card.black?
+        Curses.attrset(Curses.color_pair(COLOR_PAIR_IDS[:black_card]))
+      end
+      Curses.addstr(card.to_s)
+      Curses.attrset(Curses::A_NORMAL)
+    end
+
+    def render_with_border
+      Curses.addstr('[')
+      render
+      Curses.addstr(']')
+    end
+  end
+
   # Commandline UI
   class NcursesUI
     CASCADE_MARGIN = 3
@@ -11,9 +38,19 @@ module Freecell
       Curses.noecho
       Curses.nonl
       Curses.curs_set(0)
+      setup_color
       @y_pos = 0
     ensure
       Curses.close_screen
+    end
+
+    def setup_color
+      Curses.start_color
+      Curses.init_pair(
+        COLOR_PAIR_IDS[:black_card],
+        Curses::COLOR_CYAN,
+        Curses::COLOR_BLACK
+      )
     end
 
     def receive_key
@@ -53,7 +90,7 @@ module Freecell
     def render_free_cells(game)
       game.free_cells.each do |card|
         display_card = card || NullCard.new
-        Curses.addstr("[#{display_card}]")
+        RenderableCard.new(display_card).render_with_border
       end
       (4 - game.free_cells.length).times { Curses.addstr("[#{NullCard.new}]") }
     end
@@ -62,7 +99,7 @@ module Freecell
       Curses.setpos(@y_pos, 24)
       game.foundations.each do |foundation|
         if (card = foundation.last)
-          Curses.addstr("[#{card}]")
+          RenderableCard.new(card).render_with_border
         else
           Curses.addstr("[#{NullCard.new}]")
         end
@@ -88,7 +125,10 @@ module Freecell
     end
 
     def print_card_row(row)
-      row.each { |card| Curses.addstr("#{card}  ") }
+      row.each do |card|
+        RenderableCard.new(card).render
+        Curses.addstr('  ')
+      end
       advance_y(by: 1, x_pos: CASCADE_MARGIN)
     end
 

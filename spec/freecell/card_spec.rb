@@ -68,4 +68,32 @@ RSpec.describe Freecell::Card do
       it { is_expected.to be true }
     end
   end
+
+  describe '#black?' do
+    subject { described_class.new(1, suit).black? }
+
+    context 'when the suit is spades' do
+      let(:suit) { :spades }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when the suit is hearts' do
+      let(:suit) { :hearts }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the suit is clubs' do
+      let(:suit) { :clubs }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when the suit is diamonds' do
+      let(:suit) { :diamonds }
+
+      it { is_expected.to be false }
+    end
+  end
 end
