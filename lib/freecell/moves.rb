@@ -135,6 +135,7 @@ module Freecell
       src_card = @free_cells[@src_idx]
       return false unless src_card
       dest_card = @cascades[@dest_idx].last
+      return true unless dest_card
       MoveLegality.tableau_move_legal?(src_card, dest_card)
     end
 
