@@ -35,7 +35,7 @@ module Freecell
     end
 
     def render_top_area(game)
-      Curses.addstr('space')
+      Curses.addstr('space                                  enter')
       advance_y(by: 1)
       render_free_cells(game)
       render_foundations(game)
