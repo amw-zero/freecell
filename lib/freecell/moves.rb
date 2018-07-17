@@ -67,7 +67,9 @@ module Freecell
 
     def legal?
       src_card = cascades[src_idx].last
+      return false unless src_card
       dest_card = cascades[dest_idx].last
+      return true if dest_card.nil?
       MoveLegality.tableau_move_legal?(src_card, dest_card)
     end
 
