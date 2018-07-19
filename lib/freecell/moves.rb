@@ -17,7 +17,9 @@ module Freecell
     def self.cascade_to_cascade_move(input, cascades)
       CascadeToCascadeMove.new(
         cascades,
-        *input.chars.map(&method(:key_to_cascade_idx))
+        *input.chars.map do |char|
+          InputIndexMappings.key_to_cascade_idx(char)
+        end
       )
     end
 
@@ -25,7 +27,7 @@ module Freecell
       CascadeToFreeCellMove.new(
         cascades,
         free_cells,
-        key_to_cascade_idx(input.chars[0])
+        InputIndexMappings.key_to_cascade_idx(input.chars[0])
       )
     end
 
@@ -33,7 +35,7 @@ module Freecell
       CascadeToFoundationMove.new(
         cascades,
         foundations,
-        key_to_cascade_idx(input.chars[0])
+        InputIndexMappings.key_to_cascade_idx(input.chars[0])
       )
     end
 
@@ -41,17 +43,9 @@ module Freecell
       FreeCellToCascadeMove.new(
         cascades,
         free_cells,
-        key_to_free_cell_idx(input.chars[0]),
-        key_to_cascade_idx(input.chars[1])
+        InputIndexMappings.key_to_free_cell_idx(input.chars[0]),
+        InputIndexMappings.key_to_cascade_idx(input.chars[1])
       )
-    end
-
-    def self.key_to_cascade_idx(key)
-      key.ord - ASCIIBytes::LOWERCASE_A
-    end
-
-    def self.key_to_free_cell_idx(key)
-      key.ord - ASCIIBytes::LOWERCASE_W
     end
   end
 
