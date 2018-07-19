@@ -1,7 +1,7 @@
 module Freecell
   # Handles user input, giving it semantic game meaning
   class InputHandler
-    attr_reader :move_complete, :current_move
+    attr_reader :move_complete, :current_move, :move_parts
 
     def initialize
       @move_parts = []

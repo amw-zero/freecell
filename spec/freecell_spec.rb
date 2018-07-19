@@ -173,4 +173,32 @@ RSpec.describe Freecell do
 
     it { is_expected.to eq [cascades, free_cells, foundations] }
   end
+
+  describe 'tracking of selected cards' do
+    subject { game.selected_card }
+
+    context 'when the selected card is in a cascade' do
+      let(:game) { Freecell::Game.new(cascades: cascades) }
+      let(:five_of_hearts) { Freecell::Card.new(5, :hearts) }
+      let(:cascades) { [[five_of_hearts]] }
+
+      before do
+        game.handle_key('a')
+      end
+
+      it { is_expected.to eq(five_of_hearts) }
+    end
+
+    context 'when the selected card is in a free cell' do
+      let(:game) { Freecell::Game.new(free_cells: free_cells) }
+      let(:five_of_hearts) { Freecell::Card.new(5, :hearts) }
+      let(:free_cells) { [five_of_hearts] }
+
+      before do
+        game.handle_key('w')
+      end
+
+      it { is_expected.to eq(five_of_hearts) }
+    end
+  end
 end
