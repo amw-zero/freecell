@@ -10,6 +10,7 @@ require 'freecell/input_index_mappings'
 require 'freecell/move_legality'
 require 'freecell/moves'
 require 'freecell/ncurses_ui'
+require 'freecell/selected_card'
 
 # Module containing all Freecell code
 module Freecell

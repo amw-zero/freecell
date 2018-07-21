@@ -33,6 +33,14 @@ module Freecell
       %i[spades clubs].include?(suit)
     end
 
+    def red?
+      !black?
+    end
+
+    def colorable?
+      true
+    end
+
     def to_s
       card_string = "#{@rank}#{@suit.to_s[0]}"
       if @rank < 10
@@ -54,6 +62,10 @@ module Freecell
     end
 
     def black?
+      false
+    end
+
+    def colorable?
       false
     end
 
