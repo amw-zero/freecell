@@ -1,18 +1,22 @@
 module Freecell
   # Factory for creating moves from user input
   class Move
+    # rubocop:disable Metrics/MethodLength
     def self.from(input:, cascades:, free_cells:, foundations:)
       case input
-      when /[a-h][a-h]/
+      when /^[a-h][a-h]/
         cascade_to_cascade_move(input, cascades)
-      when /[a-h] /
+      when /^[a-h] /
         cascade_to_free_cell_move(input, cascades, free_cells)
-      when /[a-h]\n/
+      when /^[a-h]\n/
         cascade_to_foundation_move(input, cascades, foundations)
-      when /[w-z][a-h]/
+      when /^[w-z][a-h]/
         free_cell_to_cascade_move(input, cascades, free_cells)
+      when /^\d[a-h][a-h]/
+        multi_card_cascade_move(input, cascades, free_cells)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def self.cascade_to_cascade_move(input, cascades)
       CascadeToCascadeMove.new(
@@ -45,6 +49,16 @@ module Freecell
         free_cells,
         InputIndexMappings.key_to_free_cell_idx(input.chars[0]),
         InputIndexMappings.key_to_cascade_idx(input.chars[1])
+      )
+    end
+
+    def self.multi_card_cascade_move(input, cascades, free_cells)
+      MultiCardCascadeMove.new(
+        cascades,
+        free_cells,
+        InputIndexMappings.key_to_cascade_idx(input.chars[1]),
+        InputIndexMappings.key_to_cascade_idx(input.chars[2]),
+        input.chars[0]
       )
     end
   end
@@ -139,6 +153,58 @@ module Freecell
       card = @free_cells[@src_idx]
       @free_cells[@src_idx] = nil
       @cascades[@dest_idx] << card
+    end
+  end
+
+  # Carry out moving multiple cards between cascades
+  class MultiCardCascadeMove
+    def initialize(cascades, free_cells, src_idx, dest_idx, num_cards)
+      @cascades = cascades
+      @free_cells = free_cells
+      @src_idx = src_idx.to_i
+      @dest_idx = dest_idx.to_i
+      @num_cards = num_cards.to_i
+    end
+
+    def legal?
+      return false unless can_move_num_cards?
+      return false unless all_src_cards_legal?
+      return true if dest_card.nil?
+
+      MoveLegality.tableau_move_legal?(top_src_card, dest_card)
+    end
+
+    def all_src_cards
+      @cascades[@src_idx][-@num_cards, @num_cards]
+    end
+
+    def all_src_cards_legal?
+      all_src_cards.each_cons(2).all? do |top_card, bottom_card|
+        MoveLegality.tableau_move_legal?(bottom_card, top_card)
+      end
+    end
+
+    def dest_card
+      @cascades[@dest_idx].last
+    end
+
+    def top_src_card
+      @cascades[@src_idx][-@num_cards]
+    end
+
+    def free_cell_capacity
+      GameConstants::NUM_FREE_CELLS - @free_cells.compact.length + 1
+    end
+
+    def can_move_num_cards?
+      open_cascade_multiplier = @cascades.count(&:empty?)
+      total_capacity = free_cell_capacity * 2**open_cascade_multiplier
+      @num_cards <= total_capacity
+    end
+
+    def perform
+      @cascades[@dest_idx] +=
+        @cascades[@src_idx].slice!(-@num_cards, @num_cards)
     end
   end
 end

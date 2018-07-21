@@ -12,13 +12,21 @@ module Freecell
     def handle_key(key)
       @current_move = nil
       @move_parts << sanitize_input(key)
-      if @move_parts.length == 2
+      if single_card_move_complete? || multi_card_move_complete?
         @move_complete = true
         @current_move = @move_parts.join
         @move_parts = []
       else
         @move_complete = false
       end
+    end
+
+    def single_card_move_complete?
+      move_parts.join =~ /^[a-z]/ && move_parts.length == 2
+    end
+
+    def multi_card_move_complete?
+      move_parts.join =~ /^\d/ && move_parts.length == 3
     end
 
     def sanitize_input(key)
