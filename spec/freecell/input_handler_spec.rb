@@ -60,7 +60,7 @@ RSpec.describe Freecell::InputHandler do
         input_handler.handle_key('c')
       end
 
-      it { is_expected.to be_nil }
+      it { is_expected.to eq 'c' }
     end
 
     context 'when a special character is received' do

@@ -7,7 +7,7 @@ module Freecell
 
     def initialize(card, selected_card)
       @card = card
-      @selected = card.colorable? && card == selected_card
+      @selected = card.colorable? && selected_card.include?(card)
     end
 
     def render

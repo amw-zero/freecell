@@ -205,7 +205,7 @@ RSpec.describe Freecell do
         game.handle_key('a')
       end
 
-      it { is_expected.to eq(five_of_hearts) }
+      it { is_expected.to eq([five_of_hearts]) }
     end
 
     context 'when the selected card is in a free cell' do
@@ -217,7 +217,7 @@ RSpec.describe Freecell do
         game.handle_key('w')
       end
 
-      it { is_expected.to eq(five_of_hearts) }
+      it { is_expected.to eq([five_of_hearts]) }
     end
   end
 end

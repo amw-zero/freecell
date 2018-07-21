@@ -12,7 +12,7 @@ module Freecell
       @free_cells = free_cells
       @foundations = foundations
       @input_handler = InputHandler.new
-      @selected_card = NullCard.new
+      @selected_card = [NullCard.new]
     end
 
     def deal_cards
@@ -21,8 +21,11 @@ module Freecell
 
     def handle_key(key)
       @input_handler.handle_key(key)
-      current_key = @input_handler.move_parts.first
-      @selected_card = SelectedCard.from(current_key, cascades, free_cells)
+      @selected_card = SelectedCard.from(
+        @input_handler.current_move,
+        cascades,
+        free_cells
+      )
       return unless @input_handler.move_complete
       perform_current_move
     end

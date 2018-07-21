@@ -1,7 +1,7 @@
 module Freecell
   # Handles user input, giving it semantic game meaning
   class InputHandler
-    attr_reader :move_complete, :current_move, :move_parts
+    attr_reader :move_complete, :move_parts
 
     def initialize
       @move_parts = []
@@ -27,6 +27,11 @@ module Freecell
 
     def multi_card_move_complete?
       move_parts.join =~ /^\d/ && move_parts.length == 3
+    end
+
+    def current_move
+      return @current_move if @current_move
+      move_parts.join unless move_parts.empty?
     end
 
     def sanitize_input(key)
