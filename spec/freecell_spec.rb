@@ -151,6 +151,25 @@ RSpec.describe Freecell do
     it { is_expected.to eq [three_of_hearts, [nil]] }
   end
 
+  describe 'Multi card cascade moves' do
+    subject { game.cascades }
+
+    let(:game) { Freecell::Game.new(cascades: cascades) }
+    let(:five_of_spades) { Freecell::Card.new(5, :spades) }
+    let(:four_of_diamonds) { Freecell::Card.new(4, :diamonds) }
+    let(:six_of_hearts) { Freecell::Card.new(6, :hearts) }
+    let(:cascades) { [[five_of_spades, four_of_diamonds], [six_of_hearts]] }
+    let(:all_cards) { [six_of_hearts, five_of_spades, four_of_diamonds] }
+
+    before do
+      game.handle_key('2')
+      game.handle_key('a')
+      game.handle_key('b')
+    end
+
+    it { is_expected.to eq [[], all_cards] }
+  end
+
   describe 'invalid moves' do
     subject { [cascades, free_cells, foundations] }
 
