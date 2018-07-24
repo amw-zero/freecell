@@ -194,7 +194,7 @@ RSpec.describe Freecell do
   end
 
   describe 'tracking of selected cards' do
-    subject { game.selected_card }
+    subject { game.card_selection }
 
     context 'when the selected card is in a cascade' do
       let(:game) { Freecell::Game.new(cascades: cascades) }

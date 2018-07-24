@@ -5,9 +5,9 @@ module Freecell
   class RenderableCard
     attr_reader :card
 
-    def initialize(card, selected_card)
+    def initialize(card, card_selection)
       @card = card
-      @selected = card.colorable? && selected_card.include?(card)
+      @selected = card.colorable? && card_selection.include?(card)
     end
 
     def render
@@ -129,7 +129,7 @@ module Freecell
     def render_free_cells(game)
       game.free_cells.each do |card|
         display_card = card || NullCard.new
-        RenderableCard.new(display_card, game.selected_card).render_with_border
+        RenderableCard.new(display_card, game.card_selection).render_with_border
       end
       (4 - game.free_cells.length).times { Curses.addstr("[#{NullCard.new}]") }
     end
@@ -138,7 +138,7 @@ module Freecell
       Curses.setpos(@y_pos, 24)
       game.foundations.each do |foundation|
         if (card = foundation.last)
-          RenderableCard.new(card, game.selected_card).render_with_border
+          RenderableCard.new(card, game.card_selection).render_with_border
         else
           Curses.addstr("[#{NullCard.new}]")
         end
@@ -165,7 +165,7 @@ module Freecell
 
     def print_card_row(row, game)
       row.each do |card|
-        RenderableCard.new(card, game.selected_card).render
+        RenderableCard.new(card, game.card_selection).render
         Curses.addstr('  ')
       end
       advance_y(by: 1, x_pos: CASCADE_MARGIN)

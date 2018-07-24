@@ -1,6 +1,6 @@
 module Freecell
   # A card that is currently selected in the UI
-  class SelectedCard
+  class CardSelection
     def self.from(key, cascades, free_cells)
       case key
       when /\d[a-h]/

@@ -1,4 +1,4 @@
-RSpec.describe Freecell::SelectedCard do
+RSpec.describe Freecell::CardSelection do
   describe 'from' do
     subject { described_class.from(key, cascades, free_cells) }
 
