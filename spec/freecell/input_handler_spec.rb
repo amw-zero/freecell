@@ -75,5 +75,28 @@ RSpec.describe Freecell::InputHandler do
         expect(current_move).to eq "a\n"
       end
     end
+
+    context 'when a free cell letter is received twice' do
+      subject(:current_move) { input_handler.current_move }
+
+      before do
+        input_handler.handle_key('w')
+        input_handler.handle_key('x')
+      end
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'when an invalid character is received first' do
+      subject(:current_move) { input_handler.current_move }
+
+      before do
+        input_handler.handle_key(';')
+        input_handler.handle_key('a')
+        input_handler.handle_key('b')
+      end
+
+      it { is_expected.to eq 'ab' }
+    end
   end
 end
