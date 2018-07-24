@@ -28,6 +28,7 @@ module Freecell
       )
       return unless @input_handler.move_complete
       perform_current_move
+      @selected_card = [NullCard.new]
     end
 
     def perform_current_move
